@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resolución de Ecuaciones Cuadráticas - Universidad</title>
+    <title>Calculadora de Funciones Cuadráticas</title>
     
     <!-- Librerías de renderizado matemático KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -11,151 +11,108 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <style>
-        body { 
-            font-family: sans-serif; 
-            padding: 20px; 
-            background-color: #f8fafc; 
-            color: #1e293b;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h2 { color: #0f172a; text-align: center; }
-        .card { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            margin-bottom: 25px; 
-        }
-        .inputs-group {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-        .input-field {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        input { 
-            width: 60px; 
-            padding: 8px; 
-            margin-top: 5px;
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            text-align: center;
-        }
-        button { 
-            width: 100%;
-            padding: 12px; 
-            background: #2563eb; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        #resultados { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .step-title {
-            color: #2563eb;
-            font-weight: bold;
-            margin-top: 15px;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 5px;
-        }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; background-color: #f8fafc; }
+        .box { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-bottom: 20px; background: white; }
+        input { width: 50px; padding: 5px; text-align: center; margin-right: 10px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; width: 100%; }
+        #resultados { margin-top: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .step { margin-top: 15px; padding-bottom: 10px; border-bottom: 1px dashed #e2e8f0; }
+        .step-title { font-weight: bold; color: #007bff; }
     </style>
 </head>
 <body>
 
-    <h2>Analizador de Ecuaciones Cuadráticas</h2>
-    
-    <div class="card">
-        <p style="text-align:center; color:#64748b;">Forma: ax^2 + bx + c = 0</p>
-        <div class="inputs-group">
-            <div class="input-field"><label>a</label><input type="number" id="a" value="1"></div>
-            <div class="input-field"><label>b</label><input type="number" id="b" value="-5"></div>
-            <div class="input-field"><label>c</label><input type="number" id="c" value="6"></div>
-        </div>
-        <button onclick="resolverPasoAPaso()">Desarrollar Ejercicio</button>
+    <h2>Calculadora de Funciones Cuadráticas</h2>
+    <div class="box">
+        <label>a: <input type="number" id="a" value="1"></label>
+        <label>b: <input type="number" id="b" value="-3"></label>
+        <label>c: <input type="number" id="c" value="2"></label>
+        <br><br>
+        <button onclick="resolver()">Resolver Ejercicio</button>
     </div>
 
     <div id="resultados">
-        <h3 style="margin-top:0;">Demostración Formal:</h3>
-        <div id="pasos">Introduce los coeficientes para generar el desarrollo académico.</div>
+        <h3>Procedimiento Completo:</h3>
+        <div id="pasos">Introduce los valores y presiona el botón.</div>
     </div>
 
     <script>
-        function resolverPasoAPaso() {
+        function resolver() {
             const a = parseFloat(document.getElementById('a').value);
             const b = parseFloat(document.getElementById('b').value);
             const c = parseFloat(document.getElementById('c').value);
             const contenedor = document.getElementById('pasos');
 
-            if (isNaN(a) || isNaN(b) || isNaN(c)) {
-                contenedor.innerHTML = "Por favor, introduce coeficientes válidos.";
-                return;
-            }
-
             if (a === 0) {
-                contenedor.innerHTML = "El coeficiente a no puede ser 0.";
+                contenedor.innerHTML = "El coeficiente 'a' no puede ser 0 en una ecuación cuadrática.";
                 return;
             }
 
-            let html = `<p>Identificamos los coeficientes:</p><p>a = ${a}, b = ${b}, c = ${c}</p>`;
-
-            // 1. Discriminante
-            html += `<div class="step-title">1. Cálculo del Discriminante</div>`;
             let bCuadrado = b * b;
             let cuatroAC = 4 * a * c;
             let disc = bCuadrado - cuatroAC;
-            
-            html += `<p>Calculamos el discriminante:</p>`;
-            html += `$$\\Delta = b^2 - 4ac$$`;
-            html += `$$\\Delta = (${b})^2 - 4(${a})(${c}) = ${disc}$$`;
-
-            // 2. Sustitución
-            html += `<div class="step-title">2. Fórmula General</div>`;
             let menosB = -b;
             let dosA = 2 * a;
-            html += `<p>Sustituyendo en la fórmula general:</p>`;
-            html += `$$x = \\frac{-b \\pm \\sqrt{\\Delta}}{2a}$$`;
-            html += `$$x = \\frac{${menosB} \\pm \\sqrt{${disc}}}{${dosA}}$$`;
 
-            // 3. Soluciones
-            html += `<div class="step-title">3. Resultados</div>`;
+            // 1. Sustitución Inicial
+            let html = `<div class="step"><span class="step-title">Paso 1: Sustitución en la Fórmula General</span>`;
+            html += `$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$`;
+            html += `$$x = \\frac{-(${b}) \\pm \\sqrt{(${b})^2 - 4(${a})(${c})}}{2(${a})}$$</div>`;
+
+            // 2. Operaciones del Discriminante
+            html += `<div class="step"><span class="step-title">Paso 2: Resolución del Discriminante (dentro de la raíz)</span>`;
+            html += `$$\\Delta = (${b})^2 - 4(${a})(${c})$$`;
+            html += `$$\\Delta = ${bCuadrado} - ${cuatroAC} = ${disc}$$</div>`;
+
+            // 3. Simplificación de la fracción principal
+            html += `<div class="step"><span class="step-title">Paso 3: Simplificación de términos</span>`;
+            html += `<p>Multiplicamos los signos del numerador y resolvemos el denominador:</p>`;
+            html += `$$x = \\frac{${menosB} \\pm \\sqrt{${disc}}}{${dosA}}$$</div>`;
+
+            // 4. Bifurcación de las soluciones reales o complejas
+            html += `<div class="step"><span class="step-title">Paso 4: Separación de las dos soluciones</span>`;
 
             if (disc > 0) {
                 let raizDisc = Math.sqrt(disc);
-                let x1 = (menosB + raizDisc) / dosA;
-                let x2 = (menosB - raizDisc) / dosA;
+                let num1 = menosB + raizDisc;
+                let num2 = menosB - raizDisc;
+                let x1 = num1 / dosA;
+                let x2 = num2 / dosA;
 
-                html += `<p>Como el discriminante es positivo, calculamos las dos raíces reales:</p>`;
-                html += `$$x_1 = \\frac{${menosB} + ${raizDisc.toFixed(2)}}{${dosA}} = ${x1.toFixed(4)}$$`;
-                html += `$$x_2 = \\frac{${menosB} - ${raizDisc.toFixed(2)}}{${dosA}} = ${x2.toFixed(4)}$$`;
+                html += `<p>La raíz cuadrada de ${disc} es entera: $\\sqrt{${disc}} = ${raizDisc}$. Separamos los signos $\\pm$:</p>`;
+                
+                html += `<p><strong>Para x1 (+):</strong></p>`;
+                html += `$$x_1 = \\frac{${menosB} + ${raizDisc}}{${dosA}} = \\frac{${num1}}{${dosA}} = ${x1.toFixed(2)}$$`;
+                
+                html += `<p><strong>Para x2 (-):</strong></p>`;
+                html += `$$x_2 = \\frac{${menosB} - ${raizDisc}}{${dosA}} = \\frac{${num2}}{${dosA}} = ${x2.toFixed(2)}$$`;
+                
+                html += `<p><strong>Conjunto Solución Final:</strong> $S = \\{ ${x1.toFixed(2)}, ${x2.toFixed(2)} \\}$</p>`;
+
             } else if (disc === 0) {
                 let x = menosB / dosA;
-                html += `<p>El discriminante es cero, hay una única solución:</p>`;
-                html += `$$x = \\frac{${menosB}}{${dosA}} = ${x.toFixed(4)}$$`;
+                html += `<p>Como el discriminante es 0, la raíz se anula:</p>`;
+                html += `$$x = \\frac{${menosB} \\pm 0}{${dosA}} = \\frac{${menosB}}{${dosA}} = ${x.toFixed(2)}$$`;
+                html += `<p><strong>Conjunto Solución Único:</strong> $S = \\{ ${x.toFixed(2)} \\}$</p>`;
+
             } else {
                 let discPositivo = -disc;
                 let raizDiscCompleja = Math.sqrt(discPositivo);
                 let parteReal = menosB / dosA;
                 let parteImaginaria = raizDiscCompleja / dosA;
 
-                html += `<p>El discriminante es negativo, las soluciones pertenecen al campo complejo:</p>`;
-                html += `$$x_1 = ${parteReal.toFixed(4)} + ${parteImaginaria.toFixed(4)}i$$`;
-                html += `$$x_2 = ${parteReal.toFixed(4)} - ${parteImaginaria.toFixed(4)}i$$`;
+                html += `<p>Al tener un discriminante negativo, aplicamos números imaginarios ($\\sqrt{-1} = i$):</p>`;
+                html += `$$\\sqrt{${disc}} = \\sqrt{${discPositivo}}i = ${raizDiscCompleja.toFixed(2)}i$$`;
+                
+                html += `<p>Dividimos cada término entre el denominador ($${dosA}$):</p>`;
+                html += `$$x_1 = \\frac{${menosB}}{${dosA}} + \\frac{${raizDiscCompleja.toFixed(2)}i}{${dosA}} = ${parteReal.toFixed(2)} + ${parteImaginaria.toFixed(2)}i$$`;
+                html += `$$x_2 = \\frac{${menosB}}{${dosA}} - \\frac{${raizDiscCompleja.toFixed(2)}i}{${dosA}} = ${parteReal.toFixed(2)} - ${parteImaginaria.toFixed(2)}i$$`;
             }
+            html += `</div>`;
 
             contenedor.innerHTML = html;
             
-            // Renderizar la matemática de forma segura
+            // Forzar a KaTeX a renderizar todo el texto matemático inyectado
             renderMathInElement(contenedor, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
