@@ -12,42 +12,38 @@
 
     <style>
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: sans-serif; 
             padding: 20px; 
             background-color: #f8fafc; 
             color: #1e293b;
             max-width: 600px;
             margin: 0 auto;
         }
-        h2 { color: #0f172a; text-align: center; font-size: 24px; }
+        h2 { color: #0f172a; text-align: center; }
         .card { 
             background: white; 
             padding: 20px; 
             border-radius: 12px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             margin-bottom: 25px; 
         }
         .inputs-group {
             display: flex;
             justify-content: space-around;
-            gap: 10px;
             margin-bottom: 20px;
         }
         .input-field {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 16px;
-            font-weight: bold;
         }
         input { 
-            width: 70px; 
+            width: 60px; 
             padding: 8px; 
             margin-top: 5px;
             border: 1px solid #cbd5e1; 
             border-radius: 6px; 
             text-align: center;
-            font-size: 16px;
         }
         button { 
             width: 100%;
@@ -57,15 +53,14 @@
             border: none; 
             border-radius: 6px; 
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
         }
-        button:hover { background: #1d4ed8; }
         #resultados { 
             background: white; 
             padding: 20px; 
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .step-title {
             color: #2563eb;
@@ -81,11 +76,11 @@
     <h2>Analizador de Ecuaciones Cuadráticas</h2>
     
     <div class="card">
-        <p style="margin-top:0; text-align:center; color:#64748b;">Forma: $ax^2 + bx + c = 0$</p>
+        <p style="text-align:center; color:#64748b;">Forma: ax^2 + bx + c = 0</p>
         <div class="inputs-group">
-            <div class="input-field"><label>Coef. a</label><input type="number" id="a" value="1"></div>
-            <div class="input-field"><label>Coef. b</label><input type="number" id="b" value="-5"></div>
-            <div class="input-field"><label>Coef. c</label><input type="number" id="c" value="6"></div>
+            <div class="input-field"><label>a</label><input type="number" id="a" value="1"></div>
+            <div class="input-field"><label>b</label><input type="number" id="b" value="-5"></div>
+            <div class="input-field"><label>c</label><input type="number" id="c" value="6"></div>
         </div>
         <button onclick="resolverPasoAPaso()">Desarrollar Ejercicio</button>
     </div>
@@ -108,89 +103,59 @@
             }
 
             if (a === 0) {
-                contenedor.innerHTML = "El coeficiente 'a' no puede ser 0 en una ecuación cuadrática (se convertiría en una ecuación lineal).";
+                contenedor.innerHTML = "El coeficiente a no puede ser 0.";
                 return;
             }
 
-            // Construcción de la ecuación original en LaTeX
-            let eqTexto = `${a}x^2 ${b >= 0 ? '+ ' + b : b}x ${c >= 0 ? '+ ' + c : c} = 0`;
-            
-            let html = `<p>Sea la ecuación cuadrática propuesta:</p>$$${eqTexto}$$`;
-            html += `<p>Identificamos los coeficientes para la fórmula general:</p>$$a = ${a}, \\quad b = ${b}, \\quad c = ${c}$$`;
+            let html = `<p>Identificamos los coeficientes:</p><p>a = ${a}, b = ${b}, c = ${c}</p>`;
 
             // 1. Discriminante
-            html += `<div class="step-title">1. Cálculo del Discriminante ($\\Delta$)</div>`;
+            html += `<div class="step-title">1. Cálculo del Discriminante</div>`;
             let bCuadrado = b * b;
             let cuatroAC = 4 * a * c;
             let disc = bCuadrado - cuatroAC;
             
-            html += `<p>Aplicamos la fórmula del discriminante $\\Delta = b^2 - 4ac$:</p>`;
-            html += `$$\\Delta = (${b})^2 - 4(${a})(${c})$$`;
-            html += `$$\\Delta = ${bCuadrado} - (${cuatroAC}) = ${disc}$$`;
+            html += `<p>Calculamos el discriminante:</p>`;
+            html += `$$\\Delta = b^2 - 4ac$$`;
+            html += `$$\\Delta = (${b})^2 - 4(${a})(${c}) = ${disc}$$`;
 
-            // 2. Sustitución en la Fórmula General
-            html += `<div class="step-title">2. Sustitución en la Fórmula General</div>`;
-            html += `<p>La fórmula general viene dada por $x = \\frac{-b \\pm \\sqrt{\\Delta}}{2a}$. Sustituyendo los valores:</p>`;
-            html += `$$x = \\frac{-(${b}) \\pm \\sqrt{${disc}}}{2(${a})}$$`;
-            
+            // 2. Sustitución
+            html += `<div class="step-title">2. Fórmula General</div>`;
             let menosB = -b;
             let dosA = 2 * a;
-            html += `$$x = \\frac{{${menosB}} \\pm \\sqrt{${disc}}}{${dosA}}$$`;
+            html += `<p>Sustituyendo en la fórmula general:</p>`;
+            html += `$$x = \\frac{-b \\pm \\sqrt{\\Delta}}{2a}$$`;
+            html += `$$x = \\frac{${menosB} \\pm \\sqrt{${disc}}}{${dosA}}$$`;
 
-            // 3. Análisis de Raíces y Resolución
-            html += `<div class="step-title">3. Determinación de las Soluciones</div>`;
+            // 3. Soluciones
+            html += `<div class="step-title">3. Resultados</div>`;
 
             if (disc > 0) {
-                html += `<p>Dado que $\\Delta > 0$, la ecuación posee **dos soluciones reales distintas**. Evaluamos la raíz cuadrada de $\\Delta$:</p>`;
                 let raizDisc = Math.sqrt(disc);
-                
-                if (Number.isInteger(raizDisc)) {
-                    html += `$$\\sqrt{${disc}} = ${raizDisc}$$`;
-                } else {
-                    html += `$$\\sqrt{${disc}} \\approx ${raizDisc.toFixed(4)}$$`;
-                }
+                let x1 = (menosB + raizDisc) / dosA;
+                let x2 = (menosB - raizDisc) / dosA;
 
-                // Bifurcación de soluciones
-                html += `<p>Separamos el operador $\\pm$ para obtener ambas ramas de la solución:</p>`;
-                
-                let num1 = menosB + raizDisc;
-                let num2 = menosB - raizDisc;
-                let x1 = num1 / dosA;
-                let x2 = num2 / dosA;
-
-                html += `$$x_1 = \\frac{${menosB} + ${raizDisc.toFixed(2)}}{${dosA}} = \\frac{${num1.toFixed(2)}}{${dosA}} = ${x1.toFixed(4)}$$`;
-                html += `$$x_2 = \\frac{${menosB} - ${raizDisc.toFixed(2)}}{${dosA}} = \\frac{${num2.toFixed(2)}}{${dosA}} = ${x2.toFixed(4)}$$`;
-                
-                html += `<p><strong>Conjunto Solución:</strong></p>$$S = \\{ ${x1.toFixed(4)}, \\, ${x2.toFixed(4)} \\}$$`;
-
+                html += `<p>Como el discriminante es positivo, calculamos las dos raíces reales:</p>`;
+                html += `$$x_1 = \\frac{${menosB} + ${raizDisc.toFixed(2)}}{${dosA}} = ${x1.toFixed(4)}$$`;
+                html += `$$x_2 = \\frac{${menosB} - ${raizDisc.toFixed(2)}}{${dosA}} = ${x2.toFixed(4)}$$`;
             } else if (disc === 0) {
-                html += `<p>Dado que $\\Delta = 0$, la ecuación posee **una única solución real con multiplicidad 2**:</p>`;
                 let x = menosB / dosA;
-                html += `$$x = \\frac{${menosB} \\pm 0}{${dosA}} = ${x.toFixed(4)}$$`;
-                html += `<p><strong>Conjunto Solución:</strong></p>$$S = \\{ ${x.toFixed(4)} \\}$$`;
-
+                html += `<p>El discriminante es cero, hay una única solución:</p>`;
+                html += `$$x = \\frac{${menosB}}{${dosA}} = ${x.toFixed(4)}$$`;
             } else {
-                html += `<p>Dado que $\\Delta < 0$, la ecuación **no posee soluciones en el campo de los números reales ($\\mathbb{R}$)**. Extraemos la solución en el campo de los números complejos ($\\mathbb{C}$):</p>`;
-                
                 let discPositivo = -disc;
                 let raizDiscCompleja = Math.sqrt(discPositivo);
-                
-                html += `$$\\sqrt{${disc}} = \\sqrt{${discPositivo}} \\cdot i \\approx ${raizDiscCompleja.toFixed(4)}i$$`;
-                
                 let parteReal = menosB / dosA;
                 let parteImaginaria = raizDiscCompleja / dosA;
 
-                html += `<p>Desglosando en parte real e imaginaria:</p>`;
+                html += `<p>El discriminante es negativo, las soluciones pertenecen al campo complejo:</p>`;
                 html += `$$x_1 = ${parteReal.toFixed(4)} + ${parteImaginaria.toFixed(4)}i$$`;
                 html += `$$x_2 = ${parteReal.toFixed(4)} - ${parteImaginaria.toFixed(4)}i$$`;
-                
-                html += `<p><strong>Conjunto Solución Complejo:</strong></p>$$S = \\{ ${parteReal.toFixed(4)} \\pm ${parteImaginaria.toFixed(4)}i \\}$$`;
             }
 
-            // Aplicar los cambios en el contenedor HTML
             contenedor.innerHTML = html;
             
-            // Forzar a KaTeX a procesar los nuevos bloques matemáticos generados dinámicamente
+            // Renderizar la matemática de forma segura
             renderMathInElement(contenedor, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
@@ -202,4 +167,3 @@
     </script>
 </body>
 </html>
-
