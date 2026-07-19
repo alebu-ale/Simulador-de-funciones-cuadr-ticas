@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resolución Completa - Universidad</title>
+    <title>Analizador Cuadrático Avanzado</title>
     
-    <!-- Librerías KaTeX -->
+    <!-- Librerías KaTeX para renderizado matemático profesional -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -16,16 +16,17 @@
         .inputs { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; }
         .field { display: flex; flex-direction: column; align-items: center; width: 30%; font-weight: bold; }
         input { width: 100%; padding: 8px; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 16px; }
-        button { padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; }
+        button { padding: 12px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; }
         #resultados { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; }
-        .step { margin-bottom: 25px; padding: 12px; background: #fafafa; border-left: 4px solid #2563eb; border-radius: 4px; }
-        .step-title { font-weight: bold; color: #2563eb; margin-bottom: 8px; display: block; font-size: 16px; }
-        ul { padding-left: 20px; margin: 10px 0; }
+        .method-section { margin-bottom: 30px; padding: 15px; border-left: 4px solid #2563eb; background: #fdfdfd; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .method-title { font-size: 18px; font-weight: bold; color: #1e3a8a; margin-bottom: 10px; display: block; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
+        .sub-step { margin-left: 10px; margin-bottom: 15px; }
+        .sub-title { font-weight: bold; color: #2563eb; }
     </style>
 </head>
 <body>
 
-    <h2 style="text-align: center;">Resolución Paso a Paso Avanzada</h2>
+    <h2 style="text-align: center;">Analizador Algebraico Multimétodo</h2>
     
     <div class="card">
         <div class="inputs">
@@ -33,16 +34,16 @@
             <div class="field"><label>b</label><input type="number" id="b" value="-3"></div>
             <div class="field"><label>c</label><input type="number" id="c" value="2"></div>
         </div>
-        <button onclick="desarrollarEjercicio()">Desarrollar Ejercicio</button>
+        <button onclick="analizarEcuacion()">Analizar por Múltiples Métodos</button>
     </div>
 
     <div id="resultados">
-        <h3 style="margin-top:0;">Desarrollo Matemático Completo:</h3>
-        <div id="pasos">Introduce los coeficientes numéricos y presiona el botón para ver todo el desglose analítico.</div>
+        <h3 style="margin-top:0;">Estudio del Polinomio:</h3>
+        <div id="pasos">Ingresa los coeficientes y presiona el botón para realizar el desglose completo.</div>
     </div>
 
     <script>
-        function desarrollarEjercicio() {
+        function analizarEcuacion() {
             const a = parseFloat(document.getElementById('a').value);
             const b = parseFloat(document.getElementById('b').value);
             const c = parseFloat(document.getElementById('c').value);
@@ -53,124 +54,147 @@
                 return;
             }
             if (a === 0) {
-                contenedor.innerHTML = "El coeficiente 'a' no puede ser cero.";
+                contenedor.innerHTML = "El coeficiente 'a' debe ser distinto de cero.";
                 return;
             }
 
             let html = "";
-
-            // PASO 1: MODELO TEÓRICO
-            html += `<div class="step">
-                <span class="step-title">Paso 1: Estructura Analítica General</span>
-                <p>Toda ecuación de segundo grado responde a la forma estándar:</p>
-                $$ax^2 + bx + c = 0$$
-                <p>La ecuación cuadrática se resuelve utilizando la fórmula general:</p>
-                $$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$
-            </div>`;
-
-            // PASO 2: ASIGNACIÓN DE CONSTANTES
-            let signoB = b >= 0 ? "+ " + b : b;
-            let signoC = c >= 0 ? "+ " + c : c;
-            html += `<div class="step">
-                <span class="step-title">Paso 2: Identificación de Valores</span>
-                <p>Para la ecuación propuesta $$ ${a}x^2 ${signoB}x ${signoC} = 0 $$, extraemos los valores de los coeficientes:</p>
-                $$a = ${a}, \\quad b = ${b}, \\quad c = ${c}$$
-            </div>`;
-
-            // PASO 3: SUSTITUCIÓN TEXTUAL
-            html += `<div class="step">
-                <span class="step-title">Paso 3: Sustitución de Valores en la Fórmula</span>
-                <p>Reemplazamos explícitamente cada variable por su respectivo valor numérico dentro de paréntesis:</p>
-                $$x = \\frac{-(${b}) \\pm \\sqrt{(${b})^2 - 4(${a})(${c})}}{2(${a})}$$
-            </div>`;
-
-            // VALORES ARITMÉTICOS
             let bCuadrado = b * b;
-            let productoAC = 4 * a * c;
-            let discriminante = bCuadrado - productoAC;
+            let cuatroAC = 4 * a * c;
+            let disc = bCuadrado - cuatroAC;
             let menosB = -b;
             let dosA = 2 * a;
 
-            // PASO 4: OPERACIONES INTERMEDIAS
-            html += `<div class="step">
-                <span class="step-title">Paso 4: Resolución de Operaciones Aritméticas</span>
-                <p>Calculamos individualmente cada parte de la estructura:</p>
-                <ul>
-                    <li>Signo del término lineal: $-(${b}) = ${menosB}$</li>
-                    <li>Potencia del término lineal: (${b})^2 = ${bCuadrado}$</li>
-                    <li>Producto del radicando: $4 \\cdot (${a}) \\cdot (${c}) = ${productoAC}$</li>
-                    <li>Denominador común: $2 \\cdot (${a}) = ${dosA}$</li>
-                </ul>
-                <p>Sustituyendo estos bloques resueltos, la fracción principal se reduce a:</p>
-                $$x = \\frac{${menosB} \\pm \\sqrt{${bCuadrado} - ${productoAC}}}{${dosA}}$$
-                <p>Efectuamos la resta dentro del radical para obtener el Discriminante ($\\Delta$):</p>
-                $$x = \\frac{${menosB} \\pm \\sqrt{${discriminante}}}{${dosA}}$$
-            </div>`;
+            // ==========================================
+            // MÉTODO 1: FACTORIZACIÓN POR ASPA SIMPLE (SI ES POSIBLE)
+            // ==========================================
+            html += `<div class="method-section">
+                <span class="method-title">Método I: Análisis por Factorización (Teorema del Factor)</span>`;
+            
+            if (disc >= 0 && Math.sqrt(disc) % 1 === 0 && a === 1) {
+                // Buscamos números r1 y r2 tales que r1*r2 = c y r1+r2 = b
+                let r1 = 0, r2 = 0;
+                let encontrado = false;
+                for (let i = -Math.abs(c); i <= Math.abs(c); i++) {
+                    if (i !== 0 && c % i === 0) {
+                        let j = c / i;
+                        if (i + j === b) {
+                            r1 = i;
+                            r2 = j;
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                }
+                if (c === 0) { r1 = 0; r2 = b; encontrado = true; }
 
-            // PASO 5: BIFURCACIÓN DE ACUERDO AL DISCRIMINANTE
-            html += `<div class="step">
-                <span class="step-title">Paso 5: Análisis del Radical y Desglose de Soluciones</span>`;
-
-            if (discriminante > 0) {
-                let raiz = Math.sqrt(discriminante);
-                let numX1 = menosB + raiz;
-                let numX2 = menosB - raiz;
-                let x1 = numX1 / dosA;
-                let x2 = numX2 / dosA;
-
-                html += `<p>El discriminante es positivo ($\\Delta = ${discriminante}$), indicando que existen dos soluciones reales distintas. Evaluamos la raíz:</p>
-                $$\\sqrt{${discriminante}} = ${raiz}$$
-                <p>Sustituimos la raíz en la expresión general:</p>
-                $$x = \\frac{${menosB} \\pm ${raiz}}{${dosA}}$$
-                <p>Separamos los caminos algebraicos empleando los signos del numerador:</p>
-                
-                <p><strong>Desarrollo para $x_1$ (Ruta Suma $+$):</strong></p>
-                $$x_1 = \\frac{${menosB} + ${raiz}}{${dosA}}$$
-                $$x_1 = \\frac{${numX1}}{${dosA}}$$
-                $$x_1 = ${x1.toFixed(2)}$$
-                
-                <p><strong>Desarrollo para $x_2$ (Ruta Resta $-$):</strong></p>
-                $$x_2 = \\frac{${menosB} - ${raiz}}{${dosA}}$$
-                $$x_2 = \\frac{${numX2}}{${dosA}}$$
-                $$x_2 = ${x2.toFixed(2)}$$
-                
-                <p><strong>Conjunto Solución Final:</strong></p>
-                $$S = \\{ ${x1.toFixed(2)}, \\, ${x2.toFixed(2)} \\}$$`;
-
-            } else if (discriminante === 0) {
-                let x = menosB / dosA;
-                html += `<p>El discriminante es igual a cero ($\\Delta = 0$), reduciendo el radicando a cero y generando soluciones reales repetidas:</p>
-                $$x = \\frac{${menosB} \\pm 0}{${dosA}}$$
-                $$x = \\frac{${menosB}}{${dosA}}$$
-                $$x = ${x.toFixed(2)}$$
-                <p><strong>Conjunto Solución Final:</strong></p>
-                $$S = \\{ ${x.toFixed(2)} \\}$$`;
+                if (encontrado) {
+                    html += `<div class="sub-step">
+                        <span class="sub-title">1.1 Búsqueda de binomios:</span>
+                        <p>Buscamos dos números que multiplicados den $c = ${c}$ y sumados algebraicamente den $b = ${b}$.</p>
+                        <p>Los números correspondientes son $(${r1})$ y $(${r2})$, ya que:</p>
+                        $$(${r1}) \\cdot (${r2}) = ${c} \\quad \\text{y} \\quad (${r1}) + (${r2}) = ${b}$$
+                    </div>
+                    <div class="sub-step">
+                        <span class="sub-title">1.2 Reescribir y asociar el polinomio:</span>
+                        <p>Expresamos la ecuación en su forma factorizada $(x + r_1)(x + r_2) = 0$ invirtiendo los signos correspondientes:</p>
+                        $$(x - ${-r1})(x - ${-r2}) = 0$$
+                    </div>
+                    <div class="sub-step">
+                        <span class="sub-title">1.3 Aplicación del Teorema del Factor Cero:</span>
+                        <p>Para que el producto sea cero, igualamos cada binomio a cero de manera independiente:</p>
+                        $$x - ${-r1} = 0 \\implies x_1 = ${-r1}$$
+                        $$x - ${-r2} = 0 \\implies x_2 = ${-r2}$$
+                    </div>`;
+                }
             } else {
-                // AQUÍ SOLO CORRE SI EL DISCRIMINANTE ES NEGATIVO
-                let discPositivo = -discriminante;
-                let raizCompleja = Math.sqrt(discPositivo);
-                let parteReal = menosB / dosA;
-                let parteImaginaria = raizCompleja / dosA;
+                html += `<p>El trinomio actual no posee una factorización exacta por números enteros mediante aspa simple (el discriminante no genera una raíz perfecta o $a \\neq 1$). Se requiere análisis por métodos continuos.</p>`;
+            }
+            html += `</div>`;
 
-                html += `<p>El discriminante es negativo ($\\Delta = ${discriminante}$), lo que significa que no existen soluciones reales. Aplicamos la propiedad fundamental de los números imaginarios donde $\\sqrt{-1} = i$:</p>
-                $$\\sqrt{${discriminante}} = \\sqrt{${discPositivo} \\cdot (-1)} = \\sqrt{${discPositivo}} \\cdot i = ${raizCompleja.toFixed(2)}i$$
-                <p>Reescribimos la ecuación sustituyendo el valor imaginario obtenido:</p>
-                $$x = \\frac{${menosB} \\pm ${raizCompleja.toFixed(2)}i}{${dosA}}$$
-                <p>Distribuimos el denominador común ($${dosA}$) para separar de forma explícita la parte real y la parte imaginaria:</p>
-                $$x = \\frac{${menosB}}{${dosA}} \\pm \\frac{${raizCompleja.toFixed(2)}i}{${dosA}}$$
-                
-                <p><strong>Soluciones Complejas Conjugadas:</strong></p>
-                $$x_1 = ${parteReal.toFixed(2)} + ${parteImaginaria.toFixed(2)}i$$
-                $$x_2 = ${parteReal.toFixed(2)} - ${parteImaginaria.toFixed(2)}i$$
-                
-                <p><strong>Conjunto Solución Complejo:</strong></p>
-                $$S = \\{ ${parteReal.toFixed(2)} \\pm ${parteImaginaria.toFixed(2)}i \\}$$`;
+            // ==========================================
+            // MÉTODO 2: COMPLETAR CUADRADOS
+            // ==========================================
+            html += `<div class="method-section">
+                <span class="method-title">Método II: Completar el Cuadrado Perfecto</span>`;
+            
+            if (a !== 1) {
+                html += `<div class="sub-step">
+                    <span class="sub-title">2.1 Normalización del polinomio:</span>
+                    <p>Dividimos toda la ecuación entre $a = ${a}$ para dejar el término $x^2$ con coeficiente unitario:</p>
+                    $$x^2 + \\frac{${b}}{${a}}x + \\frac{${c}}{${a}} = 0$$
+                </div>`;
             }
 
-            html += `</div>`;
+            let bNorm = b / a;
+            let cNorm = c / a;
+            let mitadB = bNorm / 2;
+            let mitadBCuadrado = mitadB * mitadB;
+            let ladoDerecho = mitadBCuadrado - cNorm;
+
+            html += `<div class="sub-step">
+                <span class="sub-title">2.2 Aislamiento del término independiente:</span>
+                <p>Trasladamos el término constante al miembro derecho del sistema:</p>
+                $$x^2 + (${bNorm.toFixed(2)})x = ${(-cNorm).toFixed(2)}$$
+            </div>
+            <div class="sub-step">
+                <span class="sub-title">2.3 Suma del término simétrico:</span>
+                <p>Sumamos el cuadrado de la mitad del coeficiente lineal, es decir, $\\left(\\frac{b}{2}\\right)^2 = (${mitadB.toFixed(2)})^2 = ${mitadBCuadrado.toFixed(4)}$, a ambos lados para construir el trinomio cuadrado perfecto:</p>
+                $$x^2 + (${bNorm.toFixed(2)})x + ${mitadBCuadrado.toFixed(4)} = ${(-cNorm).toFixed(2)} + ${mitadBCuadrado.toFixed(4)}$$
+                $$x^2 + (${bNorm.toFixed(2)})x + ${mitadBCuadrado.toFixed(4)} = ${ladoDerecho.toFixed(4)}$$
+            </div>
+            <div class="sub-step">
+                <span class="sub-title">2.4 Factorización del binomio y despeje:</span>
+                <p>Factorizamos el miembro izquierdo como un binomio al cuadrado:</p>
+                $$\\left(x + ${mitadB.toFixed(2)}\\right)^2 = ${ladoDerecho.toFixed(4)}$$`;
+
+            if (ladoDerecho >= 0) {
+                let raizLadoDerecho = Math.sqrt(ladoDerecho);
+                html += `<p>Aplicamos raíz cuadrada a ambos miembros de la igualdad:</p>
+                $$x + ${mitadB.toFixed(2)} = \\pm \\sqrt{${ladoDerecho.toFixed(4)}}$$
+                $$x + ${mitadB.toFixed(2)} = \\pm ${raizLadoDerecho.toFixed(2)}$$
+                <p>Despejamos las dos vertientes algebraicas resultantes:</p>
+                $$x_1 = ${raizLadoDerecho.toFixed(2)} - ${mitadB.toFixed(2)} = ${(raizLadoDerecho - mitadB).toFixed(2)}$$
+                $$x_2 = -${raizLadoDerecho.toFixed(2)} - ${mitadB.toFixed(2)} = ${(-raizLadoDerecho - mitadB).toFixed(2)}$$`;
+            } else {
+                let raizCompleja = Math.sqrt(-ladoDerecho);
+                html += `<p>Debido a que el miembro derecho es negativo, introducimos la unidad imaginaria $i$:</p>
+                $$x + ${mitadB.toFixed(2)} = \\pm ${raizCompleja.toFixed(2)}i$$
+                $$x = ${(-mitadB).toFixed(2)} \\pm ${raizCompleja.toFixed(2)}i$$`;
+            }
+            html += `</div></div>`;
+
+            // ==========================================
+            // MÉTODO 3: FÓRMULA GENERAL RIGUROSA
+            // ==========================================
+            html += `<div class="method-section">
+                <span class="method-title">Método III: Teorema de la Fórmula General (Estructural)</span>
+                <div class="sub-step">
+                    <span class="sub-title">3.1 Planteamiento y Sustitución Formal:</span>
+                    $$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a} \\implies x = \\frac{-(${b}) \\pm \\sqrt{(${b})^2 - 4(${a})(${c})}}{2(${a})}$$
+                </div>
+                <div class="sub-step">
+                    <span class="sub-title">3.2 Resolución del Discriminante y Bloques:</span>
+                    $$x = \\frac{${menosB} \\pm \\sqrt{${bCuadrado} - ${cuatroAC}}}{${dosA}} \\implies x = \\frac{${menosB} \\pm \\sqrt{${disc}}}{${dosA}}$$
+                </div>
+                <div class="sub-step">
+                    <span class="sub-title">3.3 Bifurcación Analítica:</span>`;
+
+            if (disc > 0) {
+                let r = Math.sqrt(disc);
+                html += `$$x_1 = \\frac{${menosB} + ${r}}{${dosA}} = \\frac{${menosB + r}}{${dosA}} = ${((menosB + r)/dosA).toFixed(2)}$$
+                $$x_2 = \\frac{${menosB} - ${r}}{${dosA}} = \\frac{${menosB - r}}{${dosA}} = ${((menosB - r)/dosA).toFixed(2)}$$`;
+            } else if (disc === 0) {
+                html += `$$x = \\frac{${menosB}}{${dosA}} = ${(menosB/dosA).toFixed(2)}$$`;
+            } else {
+                let rComp = Math.sqrt(-disc);
+                html += `$$x = \\frac{${menosB} \\pm ${rComp.toFixed(2)}i}{${dosA}} \\implies x = ${(menosB/dosA).toFixed(2)} \\pm ${(rComp/dosA).toFixed(2)}i$$`;
+            }
+            html += `</div></div>`;
+
             contenedor.innerHTML = html;
 
-            // Renderizar todo con KaTeX de forma segura
+            // Forzar renderizado en todo el contenedor inyectado
             renderMathInElement(contenedor, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
