@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suite Analítica Cuadrática</title>
+    
+    <!-- Librerías KaTeX y Chart.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { font-family: sans-serif; padding: 15px; line-height: 1.6; background-color: #f1f5f9; color: #0f172a; }
+        .card { border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; background: white; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .inputs { display: flex; justify-content: space-between; margin-bottom: 5px; gap: 10px; }
+        .field { display: flex; flex-direction: column; align-items: center; width: 30%; font-weight: bold; }
+        input { width: 100%; padding: 8px; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 16px; }
+        
+        /* Sistema de Pestañas (Tabs) */
+        .tabs-container { display: flex; gap: 5px; margin-bottom: 15px; }
+        .tab-button { flex: 1; padding: 12px; background: #e2e8f0; border: none; font-weight: bold; font-size: 15px; cursor: pointer; border-radius: 8px; color: #475569; transition: all 0.2s; }
+        .tab-button.active { background: #2563eb; color: white; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Estilos de contenido */
+        .method-section { margin-bottom: 25px; padding: 15px; border-left: 4px solid #2563eb; background: #fafafa; border-radius: 4px; }
+        .method-title { font-size: 17px; font-weight: bold; color: #1e3a8a; margin-bottom: 10px; display: block; border-bottom: 2px solid #e2e8f0; padding-bottom: 3px; }
+        .sub-step { margin-left: 5px; margin-bottom: 15px; }
+        .sub-title { font-weight: bold; color: #2563eb; }
+        
+        .canvas-container { position: relative; width: 100%; height: 320px; margin-bottom: 15px; }
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+        .metric-card { background: #f8fafc; padding: 12px; border-left: 4px solid #10b981; border-radius: 4px; }
+        .metric-title { font-weight: bold; color: #0f766e; font-size: 13px; display: block; }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center; margin-bottom: 15px;">Suite Cuadrática Universitaria</h2>
+    
+    <!-- Bloque de Entradas Único -->
+    <div class="card">
+        <div class="inputs">
+            <div class="field"><label>a</label><input type="number" id="a" value="1" oninput="procesarTodo()"></div>
+            <div class="field"><label>b</label><input type="number" id="b" value="-3" oninput="procesarTodo()"></div>
+            <div class="field"><label>c</label><input type="number" id="c" value="2" oninput="procesarTodo()"></div>
+        </div>
+    </div>
+
+    <!-- Barra de Navegación de Pestañas -->
+    <div class="tabs-container">
+        <button class="tab-button active" onclick="cambiarPestaña('algebra')">∑ Desglose Algebraico</button>
+        <button class="tab-button" onclick="cambiarPestaña('grafica')">▰ Laboratorio Gráfico</button>
+    </div>
+
+    <!-- CONTENIDO 1: ÁLGEBRA MULTIMÉTODO -->
+    <div id="tab-algebra" class="tab-content active">
+        <div class="card">
+            <h3 style="margin-top:0;">Resolución Analítica por Métodos:</h3>
+            <div id="pasos-algebra">Cargando datos...</div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO 2: GRÁFICA INTERACTIVA -->
+    <div id="tab-grafica" class="tab-content">
+        <div class="card">
+            <div class="canvas-container">
+                <canvas id="graficoCuadratica"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h3 style="margin-top:0; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">Análisis Topológico:</h3>
+            <div id="pasos-grafica">Cargando datos...</div>
+        </div>
+    </div>
+
+    <script>
+        let miGrafico = null;
+
+        function cambiarPestaña(tipo) {
+            // Alternar clases activas en los botones
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            // Alternar visibilidad de los contenedores
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            if (tipo === 'algebra') {
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+                document.getElementById('tab-algebra').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+                document.getElementById('tab-grafica').classList.add('active');
+                // Forzar el redibujado del gráfico al cambiar de pestaña para evitar errores de tamaño
+                if(miGrafico) { miGrafico.resize(); }
+            }
+        }
+
+        function procesarTodo() {
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+            const c = parseFloat(document.getElementById('c').value);
+
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                document.getElementById('pasos-algebra').innerHTML = "Por favor, completa los coeficientes.";
+                document.getElementById('pasos-grafica').innerHTML = "Por favor, completa los coeficientes.";
+                return;
+            }
+            if (a === 0) {
+                document.getElementById('pasos-algebra').innerHTML = "El coeficiente 'a' no puede ser cero.";
+                document.getElementById('pasos-grafica').innerHTML = "El coeficiente 'a' no puede ser cero.";
+                return;
+            }
+
+            // Ejecutar ambos motores matemáticos usando los mismos valores ingresados
+            ejecutarMotorAlgebra(a, b, c);
+            ejecutarMotorGrafico(a, b, c);
+        }
+
+        function ejecutarMotorAlgebra(a, b, c) {
+            const contenedor = document.getElementById('pasos-algebra');
+            let html = "";
+            let bCuadrado = b * b;
+            let cuatroAC = 4 * a * c;
+            let disc = bCuadrado - cuatroAC;
+            let menosB = -b;
+            let dosA = 2 * a;
+
+            // METODO I: FACTORIZACIÓN
+            html += `<div class="method-section">
+                <span class="method-title">Método I: Análisis por Factorización (Tanteo)</span>`;
+            if (disc >= 0 && Math.sqrt(disc) % 1 === 0 && a === 1) {
+                let r1 = 0, r2 = 0, encontrado = false;
+                for (let i = -Math.abs(c); i <= Math.abs(c); i++) {
+                    if (i !== 0 && c % i === 0) {
+                        let j = c / i;
+                        if (i + j === b) { r1 = i; r2 = j; encontrado = true; break; }
+                    }
+                }
+                if (c === 0) { r1 = 0; r2 = b; encontrado = true; }
+
+                if (encontrado) {
+                    html += `<div class="sub-step">
+                        <p>Buscamos números cuya multiplicación resulte $c = ${c}$ y su adición algebraica sea $b = ${b}$:</p>
+                        $$(${r1}) \\cdot (${r2}) = ${c} \\quad \\text{y} \\quad (${r1}) + (${r2}) = ${b}$$
+                        <p>Estructuramos los factores e igualamos a cero de forma independiente:</p>
+                        $$(x - ${-r1})(x - ${-r2}) = 0 \\implies x_1 = ${-r1}, \\; x_2 = ${-r2}$$
+                    </div>`;
+                }
+            } else {
+                html += `<p style="color:#64748b; font-size:14px;">Este trinomio no posee raíces enteras exactas para aspa simple rápida. Se recurre a métodos continuos.</p>`;
+            }
+            html += `</div>`;
+
+            // METODO II: COMPLETAR CUADRADOS
+            let bNorm = b / a; let cNorm = c / a;
+            let mitadB = bNorm / 2; let mitadBCuadrado = mitadB * mitadB;
+            let ladoDerecho = mitadBCuadrado - cNorm;
+
+            html += `<div class="method-section">
+                <span class="method-title">Método II: Completar el Cuadrado Perfecto</span>`;
+            if(a !== 1) { html += `<p>Dividimos entre $a$: $x^2 + \\frac{${b}}{${a}}x + \\frac{${c}}{${a}} = 0$</p>`; }
+            html += `<div class="sub-step">
+                <p>Aislamos el término $c$ y sumamos $\\left(\\frac{b}{2}\\right)^2 = ${mitadBCuadrado.toFixed(4)}$ en ambos lados:</p>
+                $$x^2 + (${bNorm.toFixed(2)})x + ${mitadBCuadrado.toFixed(4)} = ${ladoDerecho.toFixed(4)}$$
+                <p>Factorizamos el trinomio a su forma de binomio cuadrado:</p>
+                $$\\left(x + ${mitadB.toFixed(2)}\\right)^2 = ${ladoDerecho.toFixed(4)}$$`;
+            
+            if (ladoDerecho >= 0) {
+                let raizLadoDerecho = Math.sqrt(ladoDerecho);
+                html += `$$x + ${mitadB.toFixed(2)} = \\pm ${raizLadoDerecho.toFixed(2)}$$
+                $$x_1 = ${(raizLadoDerecho - mitadB).toFixed(2)}, \\quad x_2 = ${(-raizLadoDerecho - mitadB).toFixed(2)}$$`;
+            } else {
+                let raizCompleja = Math.sqrt(-ladoDerecho);
+                html += `$$x + ${mitadB.toFixed(2)} = \\pm ${raizCompleja.toFixed(2)}i \\implies x = ${(-mitadB).toFixed(2)} \\pm ${raizCompleja.toFixed(2)}i$$`;
+            }
+            html += `</div></div>`;
+
+            // METODO III: FORMULA GENERAL
+            html += `<div class="method-section">
+                <span class="method-title">Método III: Teorema de la Fórmula General</span>
+                <div class="sub-step">
+                    $$x = \\frac{-(${b}) \\pm \\sqrt{(${b})^2 - 4(${a})(${c})}}{2(${a})} \\implies x = \\frac{${menosB} \\pm \\sqrt{${disc}}}{${dosA}}$$
+                </div>`;
+            if (disc > 0) {
+                let r = Math.sqrt(disc);
+                html += `<div class="sub-step">$$x_1 = \\frac{${menosB} + ${r}}{${dosA}} = ${((menosB + r)/dosA).toFixed(2)}, \\quad x_2 = \\frac{${menosB} - ${r}}{${dosA}} = ${((menosB - r)/dosA).toFixed(2)}$$</div>`;
+            } else if (disc === 0) {
+                html += `<div class="sub-step">$$x = \\frac{${menosB}}{${dosA}} = ${(menosB/dosA).toFixed(2)}$$</div>`;
+            } else {
+                let rComp = Math.sqrt(-disc);
+                html += `<div class="sub-step">$$x = ${(menosB/dosA).toFixed(2)} \\pm ${(rComp/dosA).toFixed(2)}i$$</div>`;
+            }
+            html += `</div>`;
+
+            contenedor.innerHTML = html;
+            renderMathInElement(contenedor, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}], throwOnError: false });
+        }
+
+        function ejecutarMotorGrafico(a, b, c) {
+            const contenedorTexto = document.getElementById('pasos-grafica');
+            let h = -b / (2 * a);
+            let k = (a * h * h) + (b * h) + c;
+            let disc = (b * b) - (4 * a * c);
+            let x1_text = "", x2_text = "";
+            let puntosEspeciales = [];
+
+            puntosEspeciales.push({x: h, y: k, label: 'Vértice'});
+
+            if (disc > 0) {
+                let raiz1 = (-b + Math.sqrt(disc)) / (2 * a);
+                let raiz2 = (-b - Math.sqrt(disc)) / (2 * a);
+                x1_text = `X_1 = (${raiz1.toFixed(2)}, 0)`;
+                x2_text = `X_2 = (${raiz2.toFixed(2)}, 0)`;
+                puntosEspeciales.push({x: raiz1, y: 0, label: 'Corte X1'});
+                puntosEspeciales.push({x: raiz2, y: 0, label: 'Corte X2'});
+            } else if (disc === 0) {
+                x1_text = `X = (${h.toFixed(2)}, 0)`; x2_text = "Raíz Doble";
+                puntosEspeciales.push({x: h, y: 0, label: 'Raíz Única'});
+            } else {
+                x1_text = "\\text{No intersecta el eje X (Complejas)}"; x2_text = x1_text;
+            }
+            puntosEspeciales.push({x: 0, y: c, label: 'Corte Y'});
+
+            let valoresX = []; let valoresY = [];
+            for (let x = h - 4; x <= h + 4; x += 0.25) {
+                valoresX.push(parseFloat(x.toFixed(2)));
+                valoresY.push(parseFloat(((a * x * x) + (b * x) + c).toFixed(2)));
+            }
+
+            let orientacion = a > 0 ? "Hacia arriba (Mínimo)" : "Hacia abajo (Máximo)";
+            contenedorTexto.innerHTML = `
+            <div class="metric-grid">
+                <div class="metric-card"><span class="metric-title">Concavidad</span>$$a = ${a} \\rightarrow \\text{${orientacion}}$$</div>
+                <div class="metric-card"><span class="metric-title">Vértice $(h, k)$</span>$$V = (${h.toFixed(2)}, \\, ${k.toFixed(2)})$$</div>
+                <div class="metric-card"><span class="metric-title">Intersección Y</span>$$C_y = (0, \\, ${c})$$</div>
+            </div>
+            <h4 style="margin: 10px 0 5px 0;">Cortes Reales (Eje X):</h4>
+            <ul><li>$${x1_text}$</li><li>$${x2_text}$</li></ul>`;
+            
+            renderMathInElement(contenedorTexto, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}], throwOnError: false });
+
+            // Renderizado de Chart.js
+            const ctx = document.getElementById('graficoCuadratica').getContext('2d');
+            if (miGrafico !== null) { miGrafico.destroy(); }
+
+            miGrafico = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: valoresX,
+                    datasets: [
+                        {
+                            label: `f(x) = ${a}x² + (${b})x + (${c})`,
+                            data: valoresY,
+                            borderColor: '#2563eb',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Puntos Críticos',
+                            data: puntosEspeciales.map(p => ({x: p.x, y: p.y})),
+                            backgroundColor: '#ef4444',
+                            pointRadius: 6,
+                            showLine: false,
+                            type: 'scatter'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { type: 'linear', position: 'bottom', grid: { color: '#cbd5e1' } },
+                        y: { grid: { color: '#cbd5e1' } }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    if (ctx.datasetIndex === 1) { return `${puntosEspeciales[ctx.dataIndex].label}: (${ctx.parsed.x.toFixed(2)}, ${ctx.parsed.y.toFixed(2)})`; }
+                                    return `Punto: (${ctx.parsed.x.toFixed(2)}, ${ctx.parsed.y.toFixed(2)})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Carga inicial automática al abrir el documento
+        window.onload = procesarTodo;
+    </script>
+</body>
+</html>
